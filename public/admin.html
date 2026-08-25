@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel — Al-Thabib Medical Supplies</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-body">
+
+<!-- LOGIN SCREEN -->
+<div class="login-shell" id="loginShell">
+  <div class="login-card">
+    <span class="brand-mark" style="display:flex;">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3z" stroke="#e2a93b" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 8v7M8.5 11.5h7" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </span>
+    <h2>Al-Thabib Admin Panel</h2>
+    <p class="hint">Sign in to manage products and quotations.</p>
+    <div class="login-error" id="loginError">Incorrect password. Please try again.</div>
+    <form id="loginForm">
+      <div class="field">
+        <label for="loginPass">Admin Password</label>
+        <input type="password" id="loginPass" required placeholder="Enter admin password">
+      </div>
+      <button type="submit" class="btn btn-navy" style="width:100%; justify-content:center; margin-top:6px;">Sign In</button>
+    </form>
+    <div class="login-hint-box">
+      Default password: <strong>althabib2026</strong> — change it under Settings once signed in.
+    </div>
+    <a href="index.html" class="view-site-link" style="display:block; text-align:center; margin-top:16px; color:var(--ink-soft); font-size:12.5px;">← Back to website</a>
+  </div>
+</div>
+
+<!-- ADMIN SHELL -->
+<div class="admin-shell" id="adminShell" style="display:none;">
+  <aside class="admin-sidebar">
+    <div class="brand">
+      <span class="brand-name">AL-THABIB</span><br>
+      <span class="brand-sub">Admin Panel</span>
+    </div>
+    <nav class="admin-nav" id="adminNav">
+      <button data-view="dashboard" class="active">📊 &nbsp;Overview</button>
+      <button data-view="products">📦 &nbsp;Products</button>
+      <button data-view="quotes">🧾 &nbsp;Quotations</button>
+      <button data-view="settings">⚙️ &nbsp;Settings</button>
+    </nav>
+    <div class="admin-sidebar-foot">
+      <div class="who">Isabel Muthoni Mwangi</div>
+      <div class="role">Sales &amp; Marketing Manager</div>
+      <button class="logout-btn" id="logoutBtn">Log Out</button>
+      <a href="index.html" class="view-site-link">View Live Site →</a>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <div>
+        <h1 id="topbarTitle">Overview</h1>
+        <p id="topbarSub">Welcome back — here's what's happening today.</p>
+      </div>
+      <a href="index.html" class="btn btn-ghost btn-sm">View Site</a>
+    </div>
+
+    <div class="admin-content">
+
+      <!-- DASHBOARD -->
+      <section class="admin-view active" id="view-dashboard">
+        <div class="stat-cards">
+          <div class="stat-card">
+            <div class="label">Total Products</div>
+            <div class="value" id="statTotalProducts">0</div>
+            <div class="sub" id="statCatBreakdown">—</div>
+          </div>
+          <div class="stat-card red">
+            <div class="label">Low / Out of Stock</div>
+            <div class="value" id="statLowStock">0</div>
+            <div class="sub">Needs restocking</div>
+          </div>
+          <div class="stat-card amber">
+            <div class="label">Quotations Received</div>
+            <div class="value" id="statQuotes">0</div>
+            <div class="sub" id="statQuoteSub">—</div>
+          </div>
+          <div class="stat-card green">
+            <div class="label">Paid Revenue</div>
+            <div class="value" id="statRevenue">KSh 0</div>
+            <div class="sub" id="statUnpaidValue">—</div>
+          </div>
+        </div>
+
+        <div class="admin-panel">
+          <div class="admin-panel-head">
+            <h3>Recent Quotations &amp; Consultations</h3>
+            <button class="icon-btn" data-nav="quotes">View all →</button>
+          </div>
+          <div class="admin-panel-body">
+            <table class="admin-table">
+              <thead><tr><th>Reference</th><th>Customer</th><th>Type</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+              <tbody id="recentQuotesBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="chart-grid">
+          <div class="chart-card chart-card-wide">
+            <div class="chart-card-head">
+              <div>
+                <h3>Requests Received</h3>
+                <p>Quotes vs. consultations, last 14 days</p>
+              </div>
+              <div class="chart-legend" id="trendLegend"></div>
+            </div>
+            <div class="chart-canvas-wrap"><canvas id="trendChart"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-head">
+              <div>
+                <h3>Revenue Status</h3>
+                <p>Paid vs. pending value</p>
+              </div>
+            </div>
+            <div class="chart-canvas-wrap chart-canvas-donut"><canvas id="revenueChart"></canvas></div>
+            <div class="chart-center-label" id="revenueCenterLabel"></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-head">
+              <div>
+                <h3>Stock Health</h3>
+                <p>Across the full catalogue</p>
+              </div>
+            </div>
+            <div class="chart-canvas-wrap chart-canvas-donut"><canvas id="stockChart"></canvas></div>
+            <div class="chart-center-label" id="stockCenterLabel"></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-head">
+              <div>
+                <h3>Catalogue Mix</h3>
+                <p>Products by category</p>
+              </div>
+            </div>
+            <div class="chart-canvas-wrap"><canvas id="categoryChart"></canvas></div>
+          </div>
+        </div>
+
+        <div class="admin-panel">
+          <div class="admin-panel-head">
+            <h3>Low &amp; Out-of-Stock Products</h3>
+            <button class="icon-btn" data-nav="products">Manage products →</button>
+          </div>
+          <div class="admin-panel-body">
+            <table class="admin-table">
+              <thead><tr><th>Product</th><th>Category</th><th>Stock</th><th>Price</th></tr></thead>
+              <tbody id="lowStockBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRODUCTS -->
+      <section class="admin-view" id="view-products">
+        <div class="admin-panel">
+          <div class="admin-panel-head">
+            <h3>All Products</h3>
+            <div class="toolbar-inline">
+              <select id="prodCatFilter">
+                <option value="all">All Categories</option>
+                <option value="equipment">Equipment</option>
+                <option value="drugs">Drugs</option>
+                <option value="consumables">Consumables</option>
+              </select>
+              <input type="text" id="prodSearch" placeholder="Search products…">
+              <button class="btn btn-navy btn-sm" id="addProductBtn">+ Add Product</button>
+            </div>
+          </div>
+          <div class="admin-panel-body">
+            <table class="admin-table">
+              <thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody id="productsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- QUOTES -->
+      <section class="admin-view" id="view-quotes">
+        <div class="admin-panel">
+          <div class="admin-panel-head">
+            <h3>Quotations &amp; Consultations</h3>
+            <div class="toolbar-inline">
+              <select id="quoteStatusFilter">
+                <option value="all">All Statuses</option>
+                <option value="unpaid">Unpaid</option>
+                <option value="paid">Paid</option>
+              </select>
+              <select id="quoteTypeFilter">
+                <option value="all">All Types</option>
+                <option value="quote">Product Quotes</option>
+                <option value="consultation">Consultations</option>
+              </select>
+            </div>
+          </div>
+          <div class="admin-panel-body">
+            <table class="admin-table">
+              <thead><tr><th>Reference</th><th>Customer</th><th>Type</th><th>Items</th><th>Amount</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+              <tbody id="quotesBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section class="admin-view" id="view-settings">
+        <div class="admin-panel" style="max-width:480px;">
+          <div class="admin-panel-head"><h3>Change Admin Password</h3></div>
+          <div class="admin-panel-body" style="padding:20px 22px;">
+            <form id="passwordForm">
+              <div class="field"><label for="newPass">New Password</label><input type="password" id="newPass" required minlength="4"></div>
+              <div class="field"><label for="confirmPass">Confirm New Password</label><input type="password" id="confirmPass" required minlength="4"></div>
+              <button type="submit" class="btn btn-navy">Update Password</button>
+            </form>
+          </div>
+        </div>
+        <div class="admin-panel" style="max-width:480px;">
+          <div class="admin-panel-head"><h3>Data &amp; Storage</h3></div>
+          <div class="admin-panel-body" style="padding:20px 22px; font-size:13.5px; color:var(--ink-soft); line-height:1.7;">
+            Products and quotations are stored centrally in the MySQL database on the server, so everything you see
+            here is up to date across every device and every client visit — not just this browser. Every quote
+            request is also sent to <strong>muthoni.mwangi@al-thabib.com</strong> / WhatsApp at the moment it's
+            submitted, so nothing is missed even if you haven't opened the admin panel yet. Product photos are
+            stored on the server under <code>/uploads/products</code>.
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<!-- Product Add/Edit Modal -->
+<div class="pmodal-overlay" id="productModalOverlay">
+  <div class="pmodal-box">
+    <h3 id="productModalTitle">Add Product</h3>
+    <form id="productForm">
+      <input type="hidden" id="pId">
+      <div class="field"><label for="pName">Product Name</label><input type="text" id="pName" required></div>
+      <div class="field-row">
+        <div class="field"><label for="pCategory">Category</label>
+          <select id="pCategory" required>
+            <option value="equipment">Equipment</option>
+            <option value="drugs">Drugs</option>
+            <option value="consumables">Consumables</option>
+          </select>
+        </div>
+        <div class="field"><label for="pSku">SKU</label><input type="text" id="pSku"></div>
+      </div>
+      <div class="field"><label for="pDesc">Description</label><textarea id="pDesc" required></textarea></div>
+      <div class="field-row">
+        <div class="field"><label for="pPrice">Price (KSh)</label><input type="number" id="pPrice" min="0" required></div>
+        <div class="field"><label for="pUnit">Unit</label><input type="text" id="pUnit" placeholder="e.g. box of 100" required></div>
+      </div>
+      <div class="field"><label for="pStock">Stock Quantity</label><input type="number" id="pStock" min="0" required></div>
+      <div class="field">
+        <label for="pImage">Product Photo</label>
+        <input type="file" id="pImage" accept="image/png,image/jpeg,image/webp,image/gif">
+        <div id="pImagePreviewWrap" style="margin-top:10px; display:none;">
+          <img id="pImagePreview" src="" alt="Current product photo" style="width:96px; height:96px; object-fit:cover; border-radius:8px; border:1px solid var(--line);">
+          <button type="button" id="pImageRemoveBtn" class="icon-btn danger" style="margin-left:10px; vertical-align:top;">Remove photo</button>
+        </div>
+        <input type="hidden" id="pRemoveImage" value="false">
+      </div>
+      <div class="drawer-actions" style="flex-direction:row; justify-content:flex-end; margin-top:8px;">
+        <button type="button" class="btn btn-ghost btn-sm" id="productModalCancel">Cancel</button>
+        <button type="submit" class="btn btn-navy btn-sm">Save Product</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Quote Detail Modal -->
+<div class="pmodal-overlay" id="quoteModalOverlay">
+  <div class="pmodal-box" style="max-width:600px;">
+    <h3>Quotation Detail <span id="quoteModalRef" style="font-family:var(--font-mono); font-size:13px; color:var(--ink-soft);"></span></h3>
+    <div class="quote-detail-grid" id="quoteDetailGrid"></div>
+    <div id="quoteItemsWrap"></div>
+    <div class="drawer-actions" style="flex-direction:row; justify-content:flex-end; margin-top:14px;">
+      <button type="button" class="btn btn-ghost btn-sm" id="quoteModalClose">Close</button>
+      <button type="button" class="btn btn-green btn-sm" id="quoteMarkPaid">Mark as Paid</button>
+      <button type="button" class="btn btn-amber btn-sm" id="quoteMarkUnpaid">Mark as Unpaid</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span class="dot"></span><span id="toastMsg"></span></div>
+
+<script src="js/vendor/chart.umd.min.js"></script>
+<script src="js/store.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
