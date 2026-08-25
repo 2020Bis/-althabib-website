@@ -17,8 +17,8 @@ const COMPANY = {
   address: 'Trinity Gardens G02, Baldwin Lane – Off Kilimani Rd, Nairobi',
   contactName: 'Isabel Muthoni Mwangi',
   contactTitle: 'Sales and Marketing Manager',
-  phone: '+254 723 848 857',
-  phoneDial: '254723848857',
+  phone: '+254 722 343252',
+  phoneDial: '254722343252',
   email: 'muthoni.mwangi@al-thabib.com',
   website: 'www.al-thabib.com'
 };
